@@ -1,0 +1,237 @@
+{
+  "kind": "build_request",
+  "title": "InvestSmart AI fintech website with risk-profiling chatbot, recommendations, and supporting pages",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create a mobile-friendly homepage for “InvestSmart AI” with a clean fintech landing layout that explains risk profiling and includes a primary CTA button labeled “Get My Investment Plan”. The homepage must include clear sections covering: Why invest, Power of compounding, Risk vs return, and Diversification.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Homepage\n- Clean fintech-style landing page\n- Explain what risk profiling is\n- CTA button: “Get My Investment Plan”\n- Section on:\n  - Why invest\n  - Power of compounding\n  - Risk vs return\n  - Diversification"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Homepage renders without errors on mobile and desktop widths.",
+        "CTA button text is exactly “Get My Investment Plan”.",
+        "Homepage includes distinct content blocks for: risk profiling explanation, why invest, compounding, risk vs return, diversification."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement the InvestSmart AI chatbot UI that guides the user through the required risk profiling flow in a conversational, step-by-step format, collecting: age, monthly income, investment goal, investment horizon, risk tolerance choice, and investment knowledge level.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Chatbot Functionality (Core)\n\nStep 1 – Risk Profiling Questions:\nAsk the user:\n- Age  \n- Monthly income  \n- Investment goal (wealth creation, retirement, education, travel, emergency fund)  \n- Investment horizon (1–3 yrs, 3–5 yrs, 5–10 yrs, 10+ yrs)  \n- Risk tolerance:\n   - I panic if market falls 10%\n   - I can tolerate 10–20% fall\n   - I can tolerate 30%+ fall  \n- Investment knowledge (beginner/intermediate/advanced)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Chatbot asks for all listed fields and does not allow generating a plan until all answers are provided.",
+        "Investment goal choices include: wealth creation, retirement, education, travel, emergency fund.",
+        "Investment horizon choices include: 1–3 yrs, 3–5 yrs, 5–10 yrs, 10+ yrs.",
+        "Risk tolerance choices match the three sentences provided.",
+        "Investment knowledge choices include: beginner, intermediate, advanced."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add backend logic (single Motoko actor) to classify a completed user profile into exactly one of: Conservative, Moderate, Aggressive, and return the classification to the frontend.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Step 2 – Classify User as:\n- Conservative  \n- Moderate  \n- Aggressive"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes a canister method that accepts the collected risk-profiling inputs and returns one of: Conservative, Moderate, Aggressive.",
+        "The method is deterministic and returns a result for every valid input combination.",
+        "Frontend uses the backend response rather than hardcoding the classification entirely in the UI."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add backend logic (single Motoko actor) to generate investment recommendations based on the user’s classification using the exact asset allocation rules provided for Conservative, Moderate, and Aggressive profiles, and return a structured response to the frontend.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Step 3 – Give Investment Recommendation:\n\nFor Conservative:\n- 60% Debt  \n- 30% Index Funds  \n- 10% Gold  \nExamples: FD, Debt Mutual Funds, Large Cap ETFs\n\nFor Moderate:\n- 50% Equity  \n- 30% Debt  \n- 10% Gold  \n- 10% Hybrid Funds\n\nFor Aggressive:\n- 80% Equity  \n- 10% Gold  \n- 10% Debt  \nInclude: Index funds, Small cap, Mid cap"
+        ]
+      },
+      "acceptanceCriteria": [
+        "For Conservative, the returned allocation contains exactly: 60% Debt, 30% Index Funds, 10% Gold, and includes examples FD, Debt Mutual Funds, Large Cap ETFs.",
+        "For Moderate, the returned allocation contains exactly: 50% Equity, 30% Debt, 10% Gold, 10% Hybrid Funds.",
+        "For Aggressive, the returned allocation contains exactly: 80% Equity, 10% Gold, 10% Debt, and includes equity guidance: Index funds, Small cap, Mid cap.",
+        "Backend response format is stable/typed and includes allocation labels and percentages suitable for charting."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement the chatbot final output screen that shows: Risk Profile Result, an Asset Allocation Pie Chart (if possible), a Monthly SIP suggestion, 3 model portfolios, and a Do’s and Don’ts list, using the backend recommendation response.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Step 4 – Output:\n\nThe chatbot should generate:\n\n- Risk Profile Result  \n- Asset Allocation Pie Chart (if possible)  \n- Monthly SIP suggestion  \n- 3 model portfolios  \n- Do’s and Don’ts"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Results view displays the profile label (Conservative/Moderate/Aggressive).",
+        "A pie chart is rendered from the allocation percentages; if a chart cannot be rendered, a clear fallback visualization (e.g., labeled percentage list) is shown.",
+        "Monthly SIP suggestion is displayed as a currency-formatted monthly amount derived from the provided user inputs (at minimum monthly income and/or goal/horizon) and described in simple English.",
+        "Exactly 3 model portfolios are displayed, each with clear components aligned to the user’s risk profile allocation.",
+        "A Do’s and Don’ts section is shown with at least 3 items each, written in simple English."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Create a “Learn Investing” page that presents blog-style educational content for beginner investors in a simple, GenZ-friendly tone (no complex jargon).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Additional Pages\n\n- Learn Investing (blogs)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A Learn Investing page exists and is reachable via site navigation.",
+        "The page displays multiple blog entries or sections with readable headings and short paragraphs.",
+        "Content tone is simple English and beginner-friendly."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Create a SIP Calculator page that lets users input values and calculates a SIP projection, with mobile-friendly form layout and clear results presentation.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Additional Pages\n\n- SIP Calculator"
+        ]
+      },
+      "acceptanceCriteria": [
+        "SIP Calculator page exists and is reachable via navigation.",
+        "Users can enter SIP inputs (at minimum: monthly investment, expected rate/return, and duration) and see computed results.",
+        "Validation prevents empty/invalid inputs from producing NaN/blank results."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Create an “About Us” page for InvestSmart AI.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Additional Pages\n\n- About Us"
+        ]
+      },
+      "acceptanceCriteria": [
+        "About page exists and is reachable via navigation.",
+        "About page includes a short description of InvestSmart AI’s purpose for beginner investors."
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Create a “Disclaimer” page that clearly states the content is educational only and explicitly “Not SEBI advice”.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Disclaimer (Not SEBI advice, educational only)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Disclaimer page exists and is reachable via navigation (and/or footer).",
+        "Disclaimer text includes both concepts: educational only and “Not SEBI advice”."
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Apply the requested UI style and tone across all pages: fintech colors (blue/white/green), minimal Groww/Upstox-like design, mobile-friendly layout, simple English, GenZ-friendly copy, and avoid complex jargon.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Tone:\n- Simple English  \n- GenZ friendly  \n- No complex jargon  \n\nUI Style:\n- Fintech colors: Blue, White, Green  \n- Minimal design like Groww/Upstox  \n- Mobile friendly"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Primary UI palette uses blue/white/green consistently across header, buttons, and accents.",
+        "Typography and spacing read as minimal/fintech (no cluttered layouts).",
+        "All primary flows (homepage CTA, chatbot, calculator) are usable on small screens without horizontal scrolling.",
+        "User-facing copy avoids complex finance jargon and uses short, clear sentences."
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Add required generated brand assets to the app as static files under frontend/public/assets/generated and use them in the UI (header/hero) without routing image delivery through the backend.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "Create a professional website with an AI chatbot named “InvestSmart AI”."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images exist under frontend/public/assets/generated.",
+        "UI renders the logo in the site header and uses the hero illustration on the homepage.",
+        "No backend endpoints are used to serve images."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not modify files under frontend/src/components/ui (compose existing UI components instead).",
+    "Do not modify immutable hook/entry files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
+  ],
+  "nonGoals": [
+    "Do not integrate external LLM APIs (e.g., OpenAI/Anthropic) for chatbot responses.",
+    "Do not implement third-party authentication beyond Internet Identity.",
+    "Do not provide real financial advisory or SEBI registration workflows; keep recommendations educational and rule-based."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Fintech wordmark logo reading “InvestSmart AI”, clean minimal vector style, blue/green on white (investsmart-logo.dim_512x128.png)",
+      "Modern fintech hero illustration with abstract growth chart + coins + shield motif, minimal flat style, blue/green palette on white (investsmart-hero.dim_1600x900.png)",
+      "Set of 3 minimal line icons: shield, pie chart, and rocket; consistent stroke style; blue/green (investsmart-icons.dim_512x512.png)"
+    ],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

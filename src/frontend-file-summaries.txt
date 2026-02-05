@@ -1,0 +1,19 @@
+{
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, defining all routes (home, chatbot, learn, SIP calculator, about, disclaimer) and wrapping the app with ThemeProvider and shared layout (header/footer).",
+  "frontend/src/pages/Home.tsx": "Homepage component featuring a fintech-style hero section with CTA button \"Get My Investment Plan\", educational sections explaining risk profiling, why invest, compounding, risk vs return, and diversification with cards and icons.",
+  "frontend/src/pages/Chatbot.tsx": "Chatbot page container managing the risk profiling flow state, toggling between the question flow (RiskProfilingChatFlow) and results display (ChatbotResults) based on completion status.",
+  "frontend/src/components/chatbot/RiskProfilingChatFlow.tsx": "Step-by-step conversational UI collecting user inputs (age, income, goal, horizon, risk tolerance, knowledge), validating each step, and calling the backend classifyProfile method before showing results.",
+  "frontend/src/components/chatbot/ChatbotResults.tsx": "Results screen displaying risk profile classification, asset allocation pie chart, monthly SIP suggestion, 3 model portfolios, and do's/don'ts list using backend recommendation data with proper TypeScript typing for the allocation data array.",
+  "frontend/src/components/charts/AssetAllocationPieChart.tsx": "Recharts-based pie chart component visualizing asset allocation percentages with color-coded segments and a fallback list view if data is unavailable.",
+  "frontend/src/pages/LearnInvesting.tsx": "Educational blog-style page with beginner-friendly content covering investing basics, risk/return, compounding, diversification, SIP explanation, and common mistakes in simple GenZ-friendly language.",
+  "frontend/src/pages/SipCalculator.tsx": "SIP calculator page with input form (monthly investment, expected return, time period) and results display showing total invested, estimated returns, and total value with validation.",
+  "frontend/src/pages/About.tsx": "About Us page describing InvestSmart AI's mission to help beginner investors with personalized, jargon-free investment guidance in a simple, accessible format.",
+  "frontend/src/pages/Disclaimer.tsx": "Disclaimer page clearly stating the content is educational only, explicitly \"Not SEBI advice\", with warnings about investment risks and recommendations to consult certified advisors.",
+  "frontend/src/components/layout/SiteHeader.tsx": "Responsive site header with logo, desktop navigation menu, and mobile sheet menu, highlighting active routes and using the generated logo asset.",
+  "frontend/src/components/layout/SiteFooter.tsx": "Site footer with branding, quick links, legal links (including disclaimer), educational reminder, and attribution to caffeine.ai with heart icon.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for backend integration: useClassifyProfile mutation for risk profiling and useGenerateRecommendation query for fetching investment recommendations.",
+  "frontend/src/lib/finance.ts": "Finance utility functions for currency formatting (INR) and calculating SIP suggestions based on monthly income and investment horizon with educational explanations.",
+  "frontend/src/lib/sipCalculator.ts": "SIP calculation utilities implementing the future value formula for systematic investment plans and currency formatting for display.",
+  "frontend/src/index.css": "Global styles with OKLCH color system defining fintech blue/white/green palette for light and dark modes, custom utility classes for fintech colors, and design tokens.",
+  "frontend/tailwind.config.js": "Tailwind configuration extending theme with fintech-blue and fintech-green custom colors, maintaining existing design tokens and adding fintech-specific color utilities."
+}

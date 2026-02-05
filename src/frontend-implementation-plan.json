@@ -1,0 +1,279 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "InvestSmart AI fintech website (frontend) with risk-profiling chatbot, results, and supporting pages",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Create a mobile-friendly InvestSmart AI homepage with fintech landing layout, risk profiling explanation, required sections, and primary CTA routing to the chatbot.",
+      "acceptanceCriteria": [
+        "Homepage renders without errors on mobile and desktop widths.",
+        "CTA button text is exactly “Get My Investment Plan”.",
+        "Homepage includes distinct content blocks for: risk profiling explanation, why invest, compounding, risk vs return, diversification."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Home.tsx",
+          "operation": "create",
+          "description": "Implement a clean, mobile-friendly fintech landing page with distinct sections for risk profiling explanation, Why invest, Power of compounding, Risk vs return, and Diversification; include primary CTA button labeled exactly “Get My Investment Plan” that navigates to the chatbot flow. (If using shadcn-ui layout primitives like Card/Button, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Add routing and layout wiring so the homepage is reachable at the root route and the CTA navigates into the chatbot route; include shared header/footer layout wrapper. (If using shadcn-ui navigation/menu primitives, verify the component's usage instructions before implementing.)"
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Implement a step-by-step conversational chatbot UI to collect all required risk profiling inputs before allowing plan generation.",
+      "acceptanceCriteria": [
+        "Chatbot asks for all listed fields and does not allow generating a plan until all answers are provided.",
+        "Investment goal choices include: wealth creation, retirement, education, travel, emergency fund.",
+        "Investment horizon choices include: 1–3 yrs, 3–5 yrs, 5–10 yrs, 10+ yrs.",
+        "Risk tolerance choices match the three sentences provided.",
+        "Investment knowledge choices include: beginner, intermediate, advanced."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Chatbot.tsx",
+          "operation": "create",
+          "description": "Create the chatbot page container with a conversational UI shell (message list + input controls) and route-level layout; ensure the flow is mobile-friendly and progresses step-by-step through: age, monthly income, investment goal, investment horizon, risk tolerance (exact 3 sentences), and investment knowledge level. (If using shadcn-ui components like Button/Input/Select/Card, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/components/chatbot/RiskProfilingChatFlow.tsx",
+          "operation": "create",
+          "description": "Implement the state machine/step manager for the conversational risk profiling flow: enforce required answers for all fields, provide fixed choice options exactly as specified, and only enable 'generate plan' once the profile is complete. (If using shadcn-ui Select/RadioGroup components, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/lib/riskProfiling.ts",
+          "operation": "create",
+          "description": "Add helper utilities to normalize/validate inputs (e.g., parse age/income, map investment horizon and risk tolerance selections to numeric codes suitable for backend calls) and to produce user-friendly labels for display."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the chatbot route into the app router and ensure navigation can reach it from the header (and from homepage CTA). (If using shadcn-ui navigation primitives, verify the component's usage instructions before implementing.)"
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Create a chatbot results screen that displays risk profile, allocation visualization, SIP suggestion, 3 model portfolios, and do’s/don’ts using backend recommendation response.",
+      "acceptanceCriteria": [
+        "Results view displays the profile label (Conservative/Moderate/Aggressive).",
+        "A pie chart is rendered from the allocation percentages; if a chart cannot be rendered, a clear fallback visualization (e.g., labeled percentage list) is shown.",
+        "Monthly SIP suggestion is displayed as a currency-formatted monthly amount derived from the provided user inputs (at minimum monthly income and/or goal/horizon) and described in simple English.",
+        "Exactly 3 model portfolios are displayed, each with clear components aligned to the user’s risk profile allocation.",
+        "A Do’s and Don’ts section is shown with at least 3 items each, written in simple English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/chatbot/ChatbotResults.tsx",
+          "operation": "create",
+          "description": "Implement the final output/results UI: show risk profile label, allocation visualization, monthly SIP suggestion, exactly 3 model portfolios aligned to the profile, and a do’s/don’ts list (>=3 each) in simple English; consume the backend recommendation response and avoid hardcoding the full recommendation output in the UI. (If using shadcn-ui Card/Badge/Button components, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/components/charts/AssetAllocationPieChart.tsx",
+          "operation": "create",
+          "description": "Render an allocation pie chart from percentage data; include a robust fallback (labeled percentage list) if chart rendering fails or data is incomplete. Keep it lightweight (e.g., SVG-based) to avoid adding new dependencies."
+        },
+        {
+          "path": "frontend/src/lib/finance.ts",
+          "operation": "create",
+          "description": "Add currency formatting helpers and a simple, educational (non-advisory) SIP suggestion calculator derived from collected inputs (at minimum monthly income and/or goal/horizon), returning a monthly amount and short explanation string."
+        },
+        {
+          "path": "frontend/src/components/chatbot/useRecommendation.ts",
+          "operation": "create",
+          "description": "Create a small hook that uses the existing actor from frontend/src/hooks/useActor.ts to call backend classifyProfile(...) and generateRecommendation(...), then adapts the response into view-ready data for the results screen. (Verify the component's usage instructions before implementing if using shadcn-ui loading/skeleton primitives.)"
+        },
+        {
+          "path": "frontend/src/pages/Chatbot.tsx",
+          "operation": "modify",
+          "description": "Integrate results rendering into the chatbot flow: once all answers are collected, call the backend via the actor to get classification and recommendation, then render the results screen; ensure the user cannot generate a plan until all answers are present. (If using shadcn-ui components for steps/progress, verify the component's usage instructions before implementing.)"
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Create a Learn Investing page with blog-style beginner-friendly, GenZ-friendly educational content and navigation access.",
+      "acceptanceCriteria": [
+        "A Learn Investing page exists and is reachable via site navigation.",
+        "The page displays multiple blog entries or sections with readable headings and short paragraphs.",
+        "Content tone is simple English and beginner-friendly."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/LearnInvesting.tsx",
+          "operation": "create",
+          "description": "Implement a Learn Investing page with multiple blog-style sections (headings + short paragraphs) in simple, GenZ-friendly English with minimal jargon. (If using shadcn-ui Card/Accordion components, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/components/layout/SiteHeader.tsx",
+          "operation": "create",
+          "description": "Create a reusable site header that includes navigation links to required pages (Home, Chatbot, Learn Investing, SIP Calculator, About, Disclaimer) and displays the InvestSmart AI logo asset. (If using shadcn-ui navigation/menu components, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the Learn Investing route into the router and ensure the header nav link points to it."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Create a mobile-friendly SIP Calculator page with validated inputs and clear projection results.",
+      "acceptanceCriteria": [
+        "SIP Calculator page exists and is reachable via navigation.",
+        "Users can enter SIP inputs (at minimum: monthly investment, expected rate/return, and duration) and see computed results.",
+        "Validation prevents empty/invalid inputs from producing NaN/blank results."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/SipCalculator.tsx",
+          "operation": "create",
+          "description": "Implement a SIP calculator page with a mobile-friendly form (monthly investment, expected rate/return, duration) and a clear results panel; include input validation and prevent NaN/blank results. (If using shadcn-ui Input/Button/Card components, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/lib/sipCalculator.ts",
+          "operation": "create",
+          "description": "Add pure calculation utilities for SIP projection plus validation helpers (e.g., required fields, numeric ranges) to keep UI logic simple and avoid NaN propagation."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the SIP Calculator route into the router and ensure the header nav includes a link to it."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Create an About Us page describing InvestSmart AI’s purpose for beginner investors and make it reachable via navigation.",
+      "acceptanceCriteria": [
+        "About page exists and is reachable via navigation.",
+        "About page includes a short description of InvestSmart AI’s purpose for beginner investors."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/About.tsx",
+          "operation": "create",
+          "description": "Implement the About Us page with a short, beginner-friendly description of InvestSmart AI’s purpose and a minimal fintech layout. (If using shadcn-ui Card components, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the About route into the router and ensure navigation links reach it."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Create a Disclaimer page stating educational-only content and explicitly “Not SEBI advice”, reachable via navigation/footer.",
+      "acceptanceCriteria": [
+        "Disclaimer page exists and is reachable via navigation (and/or footer).",
+        "Disclaimer text includes both concepts: educational only and “Not SEBI advice”."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Disclaimer.tsx",
+          "operation": "create",
+          "description": "Implement a Disclaimer page with clear text stating the content is educational only and explicitly includes the phrase “Not SEBI advice”; keep language simple and prominent. (If using shadcn-ui Alert components, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/components/layout/SiteFooter.tsx",
+          "operation": "create",
+          "description": "Create a site footer that includes a visible link to the Disclaimer page and short educational-only reminder text. (If using shadcn-ui layout primitives, verify the component's usage instructions before implementing.)"
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the Disclaimer route into the router and ensure it is reachable from navigation and/or footer links."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Apply consistent fintech styling and GenZ-friendly simple-English tone across all pages with mobile-friendly layouts and blue/white/green palette.",
+      "acceptanceCriteria": [
+        "Primary UI palette uses blue/white/green consistently across header, buttons, and accents.",
+        "Typography and spacing read as minimal/fintech (no cluttered layouts).",
+        "All primary flows (homepage CTA, chatbot, calculator) are usable on small screens without horizontal scrolling.",
+        "User-facing copy avoids complex finance jargon and uses short, clear sentences."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Define global styles and Tailwind CSS variables/theme tokens to support a minimal fintech look using a consistent blue/white/green palette; ensure good mobile typography, spacing, and accessible contrast."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Adjust/extend Tailwind theme tokens (e.g., primary/accent/chart colors) to align with the blue/white/green fintech palette and ensure consistent styling across pages."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure the shared layout applies consistent container widths, spacing, and responsive behavior (no horizontal scrolling on small screens) across all routes."
+        },
+        {
+          "path": "frontend/src/pages/Home.tsx",
+          "operation": "modify",
+          "description": "Refine homepage copy to be simple English, GenZ-friendly, and jargon-light while keeping the required sections and fintech minimal design."
+        },
+        {
+          "path": "frontend/src/pages/LearnInvesting.tsx",
+          "operation": "modify",
+          "description": "Ensure Learn Investing content tone remains simple English, GenZ-friendly, and avoids complex jargon; keep layout minimal and readable on mobile."
+        },
+        {
+          "path": "frontend/src/pages/SipCalculator.tsx",
+          "operation": "modify",
+          "description": "Ensure SIP calculator labels/help text are beginner-friendly and the layout remains usable on small screens without horizontal scrolling."
+        },
+        {
+          "path": "frontend/src/pages/Chatbot.tsx",
+          "operation": "modify",
+          "description": "Ensure the chatbot UI (prompts, button labels, help text) is clear, friendly, non-advisory, and mobile-first; keep spacing/typography consistent with the fintech theme."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Add generated brand assets under frontend/public/assets/generated and use them in the UI (header + homepage hero) as static files.",
+      "acceptanceCriteria": [
+        "Generated images exist under frontend/public/assets/generated.",
+        "UI renders the logo in the site header and uses the hero illustration on the homepage.",
+        "No backend endpoints are used to serve images."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/investsmart-logo.dim_512x128.png",
+          "operation": "create",
+          "description": "Add the generated InvestSmart AI wordmark logo static asset at this exact path and filename for direct frontend use (no backend image serving)."
+        },
+        {
+          "path": "frontend/public/assets/generated/investsmart-hero.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated homepage hero illustration static asset at this exact path and filename for direct frontend use (no backend image serving)."
+        },
+        {
+          "path": "frontend/public/assets/generated/investsmart-icons.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated set of 3 minimal line icons static asset at this exact path and filename for direct frontend use (no backend image serving)."
+        },
+        {
+          "path": "frontend/src/components/layout/SiteHeader.tsx",
+          "operation": "modify",
+          "description": "Render the logo image from frontend/public/assets/generated/investsmart-logo.dim_512x128.png in the site header; keep it responsive and accessible (alt text)."
+        },
+        {
+          "path": "frontend/src/pages/Home.tsx",
+          "operation": "modify",
+          "description": "Use the hero illustration from frontend/public/assets/generated/investsmart-hero.dim_1600x900.png in the homepage hero section; optionally incorporate the icons image from frontend/public/assets/generated/investsmart-icons.dim_512x512.png in feature/benefit callouts; ensure assets are referenced as static frontend files (no backend routing)."
+        }
+      ]
+    }
+  ]
+}

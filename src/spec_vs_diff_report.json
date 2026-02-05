@@ -1,0 +1,98 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-05T17:48:03.867Z",
+  "summary": "Core frontend pages (Home, Chatbot, Learn, SIP Calculator, About, Disclaimer) and navigation/header/footer were added, along with a Motoko backend actor exposing classification and recommendation methods. However, several backend/API requirements (especially exact asset-allocation rules and input coverage) are not implemented as specified, and some extra, unrequested app features/hooks were introduced.",
+  "missing_requirements": [
+    {
+      "id": "REQ-3",
+      "requirement": "Backend exposes a canister method that accepts the collected risk-profiling inputs (age, monthly income, investment goal, investment horizon, risk tolerance, investment knowledge) and returns one of: Conservative, Moderate, Aggressive; frontend uses backend response.",
+      "reason": "The backend classify method only accepts (age, riskTolerance, investmentHorizon) and therefore does not accept the full collected risk-profiling inputs as required by the API contract/AC.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "requirement": "Backend generates recommendations using the exact asset allocation rules for Conservative/Moderate/Aggressive (including specific labels like Debt/Index Funds/Gold/Hybrid Funds and the exact percentages) and returns a structured typed response suitable for charting.",
+      "reason": "The backend recommendation shape and allocations do not match the required rules/labels/percentages (it returns stocks/bonds/cash with different numbers, and does not include required examples/guidance fields).",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/components/chatbot/ChatbotResults.tsx"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "requirement": "Chatbot results show Risk Profile Result, Asset Allocation Pie Chart (or clear fallback), Monthly SIP suggestion, exactly 3 model portfolios aligned to the user’s risk profile allocation, and Do’s and Don’ts (≥3 each) using backend recommendation response.",
+      "reason": "While a pie chart component and SIP suggestion utility exist, the results component is truncated so the Do’s/Don’ts section and alignment to the required backend allocation rules cannot be verified; additionally, the backend recommendation fields (stocks/bonds/cash) do not align with the specified asset buckets, making 'aligned to allocation' unmet.",
+      "evidence": [
+        "frontend/src/components/chatbot/ChatbotResults.tsx",
+        "backend/main.mo",
+        "frontend/src/components/charts/AssetAllocationPieChart.tsx",
+        "frontend/src/lib/finance.ts"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Introduced a different backend recommendation schema and asset buckets (stocks/bonds/cash) instead of the specified allocations (Debt/Index Funds/Gold/Hybrid Funds/Equity) and required examples/guidance fields.",
+      "reason": "Not requested; directly conflicts with the requested allocation rules and response format.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Added dark-mode/theming infrastructure using next-themes ThemeProvider.",
+      "reason": "The BuildRequest specifies a fintech style/palette but does not request theming/dark mode support.",
+      "evidence": [
+        "frontend/src/App.tsx",
+        "frontend/src/index.css"
+      ]
+    },
+    {
+      "description": "Added toast/notification Toaster (sonner).",
+      "reason": "Not requested in requirements or acceptance criteria.",
+      "evidence": [
+        "frontend/src/App.tsx"
+      ]
+    },
+    {
+      "description": "Added or replaced implementation for immutable hook/entry files (useActor.ts, useInternetIdentity.ts, main.tsx) despite constraints stating they must not be modified.",
+      "reason": "Constraint violation risk: these files appear in the diff summary content even though they are listed as immutable/no-touch in the BuildRequest.",
+      "evidence": [
+        "frontend/src/hooks/useActor.ts",
+        "frontend/src/hooks/useInternetIdentity.ts",
+        "frontend/src/main.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.74,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/charts/AssetAllocationPieChart.tsx",
+    "frontend/src/components/chatbot/ChatbotResults.tsx",
+    "frontend/src/components/chatbot/RiskProfilingChatFlow.tsx",
+    "frontend/src/components/layout/SiteFooter.tsx",
+    "frontend/src/components/layout/SiteHeader.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/lib/finance.ts",
+    "frontend/src/lib/sipCalculator.ts",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/About.tsx",
+    "frontend/src/pages/Chatbot.tsx",
+    "frontend/src/pages/Disclaimer.tsx",
+    "frontend/src/pages/Home.tsx",
+    "frontend/src/pages/LearnInvesting.tsx",
+    "frontend/src/pages/SipCalculator.tsx",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}
